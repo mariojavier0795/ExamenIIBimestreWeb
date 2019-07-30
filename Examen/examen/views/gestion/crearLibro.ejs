@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <title>Document</title>
+    <style>
+        .separador {
+            height: 10vh;
+        }
+    </style>
+</head>
+<body>
+<div class="col-md-6 text-right">
+
+
+</div>
+<div class="col-md-6 text-left">
+    <legend class="col-md-6"><%= tempNombre %></legend>
+    <form method="get" action="/api/salir">
+        <button class="col-md-6 btn btn-primary">Salir</button>
+    </form>
+</div>
+<div class="col-md-12">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <legend class="">Creación de Ingredientes</legend>
+
+        </div>
+        <div class="panel-body text-center">
+            <form action="/api/libros/crear" method="post">
+                <div class="form-group">
+                    <label for="icbnId">Opción:</label>
+                    <input name="ICBN" type="number" class="form-control" id="icbnId">
+                </div>
+
+                <div class="form-group">
+                    <label for="nombreId">Nombre Ingrediente:</label>
+                    <input name="nombre" type="text" class="form-control" id="nombreId">
+                </div>
+                <div class="form-group">
+                    <label for="numeroPaginasId">Cantidad:</label>
+                    <input name="numeroPaginas" type="number" class="form-control" id="numeroPaginasId">
+                </div>
+                <div class="form-group">
+                    <label for="edicionId">Refrigeración:</label>
+                    <input name="edicion" type="number" class="form-control" id="edicionId">
+                </div>
+                <div class="form-group">
+                    <label for="fechaPublicacionId">Fecha expiración:</label>
+                    <input type="date" name="fechaPublicacion" class="form-control" id="fechaId">
+                </div>
+                <div class="form-group">
+                    <label for="nombreEditorialId">Descripción Preparación:</label>
+                    <input type="text" name="nombreEditorial" class="form-control" id="nombreEditorialId">
+                </div>
+                <div class="form-group">
+                    <label for="autorIdId">Comida id:</label>
+                    <input  name="autor" class="form-control" id="autorIdId" value=<%= id%>>
+                </div>
+                <div class="form-group">
+                    <label for="precioId">Precio Ingrediente:</label>
+                    <input  name="precio" class="form-control" id="precioId">
+                </div>
+
+                <button class="btn btn-info">Guardar</button>
+
+            </form>
+            <form action="/api/autores/ver">
+                <button class="btn btn-warning reset"  >Cancelar</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

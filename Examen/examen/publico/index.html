@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <title>Ahorcado</title>
+    <style>
+        label {
+            font-size: 100px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div id="palabra">
+    <label class="l">l</label>
+    <label class="e">e</label>
+    <label class="n">n</label>
+    <label class="t">t</label>
+    <label class="e">e</label>
+    <label class="s">s</label>
+
+</div>
+<div id="contenedor-chat">
+</div>
+<label for="texto">Texto</label>
+<input id="texto" type="text">
+<button class="btn btn-info" onclick="peticionJugar()">AÑADIR CHAT</button>
+<script>
+    function peticionJugar() {
+        const letraInput = document.getElementById("texto")
+        let xe = document.getElementsByClassName("e")
+        const nombreMetodo = 'adiviname';
+        const datos = {
+            letra: letraInput.value
+        };
+        console.log("LEGUEEEE2")
+        const correcto = arregloLentes.some(
+            value => {
+                return letraInput.value == value
+            }
+        )
+        console.log("correcto", correcto)
+        if (correcto) {
+
+            var elemtnos = document.getElementsByClassName(letraInput.value)
+            elemtnos[0].style.color = "black"
+            if (elemtnos.length > 1) {
+                // debugger
+                elemtnos[1].style.color = "black"
+
+            }
+
+
+            //x[Symbol.iterator].style.fontcolor("black")
+
+
+        } else {
+            alert("LETRA INCORRECTA !!!!!!!! :(")
+        }
+        console.log("lslslsl")
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {//callback
+                console.log(respuesta);
+            }
+        )
+    }
+
+    function verLetra() {
+
+    }
+</script>
+<script src="socket.io.js"></script>
+<script>
+    const url = 'http://localhost:3010/websockets';
+    const socket = io(url);
+    console.log('ya mismo nos conectamos :v');
+    let arregloLentes = ["l", "e", "n", "t", "e", "s"]
+
+    socket.on(
+        'connect', //nombre del evento
+        () => {
+            console.log('estamos conectados!'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+            /*socket.disconnect();
+            setTimeout(
+                ()=>{
+                    socket.connect();
+                },3000
+            )*/
+        }
+    );
+    socket.on(
+        'disconnect', //nombre del evento, hay muchos eventos como el reconnect, etc
+        () => {
+            console.log('no estamos conectados alv =(!'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+        }
+    );
+    socket.on(
+        'hola', //nombre del evento, hay muchos eventos como el reconnect, etc
+        (data) => {
+            console.log("kdkkdk")
+            const letrita = data.letra.toLowerCase()
+            const correcto = arregloLentes.some(
+                value => {
+                    return letrita == value
+                }
+            )
+            if (correcto) {
+                console.log("LEGUEEEE")
+                var elemtnos = document.getElementsByClassName(letrita)
+                elemtnos[0].style.color = "black"
+                elemtnos[1].style.color = "black"
+
+
+                //x[Symbol.iterator].style.fontcolor("black")
+
+
+            } else {
+                console.log("ldldldl")
+            }
+            // parrafo.innerHTML = contenidoHTML
+            // anadirEtiqueta(nombreContenedor, parrafo)
+            //
+            // console.log('nos saludaron'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+        }
+    );
+
+</script>
+</body>
+</html>

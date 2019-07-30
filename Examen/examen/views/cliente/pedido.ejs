@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src='/socket.io.js' type='text/javascript'></script>
+    <title>Document</title>
+
+
+</head>
+<body>
+
+<script>
+    function recarga() {
+
+        const nombreMetodo = 'recarga';
+        const datos = {
+            accion: 'recargar'
+
+        };
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {
+                console.log(respuesta)
+            }
+        );
+
+    }
+    function recargap() {
+
+        const nombreMetodo ='recargaPedido';
+        const datos = {
+            accion: 'recargarPedido'
+
+        };
+
+
+
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {
+                console.log(respuesta)
+            }
+        );
+
+    }
+</script>
+
+
+<div>
+    <legend>Estado: <%= pedidoNuevo.estadoPedido %></legend>
+    <input type="hidden" id="idPedido" value="<%= pedidoNuevo.ipPedido %>">
+</div>
+<div>
+
+</div>
+<div class="row">
+    <div class="col-md-2 col-xs-6">
+        <button id="mostrar" class="btn btn-info">CARRITO</button>
+    </div>
+    <div class="col-md-2 col-xs-6">
+        <form action="/api/usuario/menu_cliente">
+            <button id="mostrar" class="btn btn-info">ATRÁS</button>
+        </form>
+    </div>
+</div>
+<script>
+    var button = document.getElementById('mostrar'); // Assumes element with id='button'
+
+    button.onclick = function () {
+        var div = document.getElementById('formPedido');
+        if (div.style.display !== 'none') {
+            div.style.display = 'none';
+        } else {
+            div.style.display = 'block';
+        }
+    };
+</script>
+<div id="formPedido" style="display: none">
+    <form action="/api/pedido/editar"
+          method="post">
+
+        <input type="hidden" class="form-control" id="telefono" name="ipPedido" value="<%= pedidoNuevo.ipPedido %>">
+        <div class="col-md-6">
+            <label for="nombreUsr">Nombre:</label>
+            <input type="text" class="form-control" id="nombreUsr" name="nombreUsuario">
+            <label for="direccion">Direccion:</label>
+            <input type="text" class="form-control" id="direccion" name="direccionUsuario">
+            <label for="telefono">Teléfono:</label>
+            <input type="text" class="form-control" id="telefono" name="telefonoUsuario">
+
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-12">
+                <label for="ciUsr">CI Usuario:</label>
+                <input type="text" class="form-control" id="ciUsr" name="ciUsuario">
+            </div>
+            <div class="col-md-6">
+                <label for="totalSin">Total sin impuestos:</label>
+                <input type="text" class="form-control" id="totalSin" name="totalSinImpuesto" value="<%= total %>">
+            </div>
+            <div class="col-md-6">
+                <label for="totalCon">Total con impuestos:</label>
+                <input type="text" class="form-control" id="totalCon" name="totalConImpuesto"
+                       value="<%= total * 1.12 %>">
+            </div>
+            <div class="col-md-12 ">
+                <button type="submit" onclick="realizarPedido()" class="btn btn-success pull-right">COMPRAR</button>
+            </div>
+
+
+        </div>
+
+    </form>
+</div>
+
+<script>
+
+    function realizarPedido() {
+        recargap()
+
+        const nombreUsuario = document.getElementById("nombreUsr").value;
+        const ciUsuario = document.getElementById("ciUsr").value;
+        const direccionUsuario = document.getElementById("direccion").value;
+        const telefonoUsuario = document.getElementById("telefono").value;
+        const idPedido = document.getElementById("idPedido").value
+        const nombreMetodo = 'realizoPedido';
+        const datos = {
+            nombreUsuario: nombreUsuario,
+            ciUsuario: ciUsuario,
+            direccionUsuario: direccionUsuario,
+            telefonoUsuario: telefonoUsuario,
+            totalSinImpuesto: 12.3,
+            totalConImpuesto: 10.1,
+            estadoPedido: 'Por despachar',
+            idPedido: idPedido
+
+        };
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {
+                console.log(respuesta)
+            }
+        );
+
+    }
+</script>
+<div style="color:white; size:40px"></div>
+<br>
+
+<script>
+    const titulo = document.getElementById('lista')
+    titulo.onclick = () => {
+
+        titulo.length
+
+        alert("bien")
+
+    }
+</script>
+<div style="color: white; height: 14px">
+</div>
+<div class="panel-body">
+    <div class="col-md-6">
+        <legend>Ingredientes disponibles</legend>
+        <div class="col-sm-5">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Seleccione un plato
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <% listaAutores.forEach((autor)=>{ %>
+                        <li>
+                            <a href="/api/pedido/realizarPedidos/<%= pedidoNuevo.ipPedido %>/<%= autor.id %>/<%= total %>/<%= busqueda%>"><%= autor.nombres %></a>
+                        </li>
+                    <% }) %>
+
+                </ul>
+            </div>
+        </div>
+        <div class=" dropdown col-md-7">
+
+            <form action="/api/pedido/buscar/<%= pedidoNuevo.ipPedido %>/<%= idAutor %>/<%= total %>" method="post">
+                <div class="class-md-6">
+                    <input id="email" type="text" class="form-control" name="buscar" placeholder="Buscar">
+                </div>
+                <div class="class-md-6">
+                    <button class="btn btn-info pull-right"> Buscar </button>
+                </div>
+            </form>
+
+
+
+        </div>
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>ICBN</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% listaLibros.forEach((libro)=>{ %>
+                <tr>
+                    <form action="/api/pedido/addPedido" method="post">
+
+                        <td><input id="nombreId" type="text" class="form-control" name="nombre"
+                                   value="<%= libro.ICBN %>"></td>
+                        <td><input id="descripcionId" type="text" class="form-control" name="descripcion"
+                                   value="<%= libro.nombre %>"></td>
+                        <td><input id="precioId" type="text" class="form-control" name="precio"
+                                   value="<%= libro.precio %>">
+
+                        </td>
+                        <td>
+                            <input id="Id" type="hidden" class="form-control" name="id" value="<%= libro.id %>">
+                            <input id="idPedido" type="hidden" class="form-control" name="idPedido"
+                                   value="<%= pedidoNuevo.ipPedido %>">
+                            <input id="busqueda" type="hidden" class="form-control" name="busqueda"
+                                   value="<%=busqueda %>">
+
+                            <button type="submit" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-plus"></span> Plus
+                            </button>
+                    </form>
+                    </td>
+
+                </tr>
+            <% }) %>
+
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <legend>Ingredientes seleccionados</legend>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <% librosSeleccionados.forEach((libro)=>{ %>
+                <tr>
+                    <form action="/api/pedido/addPedido" method="post">
+
+                        <td><input id="nombreId" type="text" class="form-control" name="nombre"
+                                   value="<%= libro.nombre %>"></td>
+                        <td><input id="descripcionId" type="text" class="form-control" name="descripcion"
+                                   value="<%= libro.precio %>"></td>
+                        <td><input id="precioId" type="text" class="form-control" name="precio"
+                                   value="<%= libro.cantidad %>">
+
+                        </td>
+                        <td>
+                            <form action="/api/pedido/deletePedido">
+                            <input id="Id" type="hidden" class="form-control" name="id" value="<%= libro.id %>">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-minus"></span> Menos
+                            </button>
+                            </form>
+                    </form>
+                    </td>
+
+                </tr>
+            <% }) %>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</div>
+
+
+<script>
+    function peticionJugar() {
+        const letraInput = document.getElementById("texto")
+        let xe = document.getElementsByClassName("e")
+        const nombreMetodo = 'adiviname';
+        const datos = {
+            letra: letraInput.value
+        };
+        console.log("LEGUEEEE2")
+        const correcto = arregloLentes.some(
+            value => {
+                return letraInput.value == value
+            }
+        )
+        console.log("correcto", correcto)
+        if (correcto) {
+
+            var elemtnos = document.getElementsByClassName(letraInput.value)
+            elemtnos[0].style.color = "black"
+            if (elemtnos.length > 1) {
+                // debugger
+                elemtnos[1].style.color = "black"
+
+            }
+
+
+            //x[Symbol.iterator].style.fontcolor("black")
+
+
+        } else {
+            alert("LETRA INCORRECTA !!!!!!!! :(")
+        }
+        console.log("lslslsl")
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {//callback
+                console.log(respuesta);
+            }
+        )
+    }
+
+    function verLetra() {
+
+    }
+</script>
+<script>
+    const url = 'http://localhost:3010/websockets';
+    const socket = io(url);
+    console.log('ya mismo nos conectamos :v');
+    let arregloLentes = ["l", "e", "n", "t", "e", "s"]
+
+    socket.on(
+        'connect', //nombre del evento
+        () => {
+            console.log('estamos conectados!'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+            /*socket.disconnect();
+            setTimeout(
+                ()=>{
+                    socket.connect();
+                },3000
+            )*/
+        }
+    );
+    socket.on(
+        'disconnect', //nombre del evento, hay muchos eventos como el reconnect, etc
+        () => {
+            console.log('no estamos conectados alv =(!'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+        }
+    );
+    socket.on(
+        'hola', //nombre del evento, hay muchos eventos como el reconnect, etc
+        (data) => {
+            console.log("kdkkdk")
+            const letrita = data.letra.toLowerCase()
+            const correcto = arregloLentes.some(
+                value => {
+                    return letrita == value
+                }
+            )
+            if (correcto) {
+                console.log("LEGUEEEE")
+                var elemtnos = document.getElementsByClassName(letrita)
+                elemtnos[0].style.color = "black"
+                elemtnos[1].style.color = "black"
+
+
+                //x[Symbol.iterator].style.fontcolor("black")
+
+
+            } else {
+                console.log("ldldldl")
+            }
+            // parrafo.innerHTML = contenidoHTML
+            // anadirEtiqueta(nombreContenedor, parrafo)
+            //
+            // console.log('nos saludaron'); //toda la logica siempre que el servidor se baja y sube se implementa aqui
+        }
+    );
+
+</script>
+</body>
+</html>

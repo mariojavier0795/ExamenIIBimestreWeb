@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Despachador</title>
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <script src='/socket.io.js' type='text/javascript'></script>
+</head>
+<body>
+<button onclick="recargap()" class="btn btn-warning">RECARGAME</button>
+<script>
+
+    function recargap() {
+
+        const nombreMetodo ='recargaPedido';
+        const datos = {
+            accion: 'recargarPedido'
+
+        };
+
+
+
+        socket.emit(
+            nombreMetodo,
+            datos,
+            (respuesta) => {
+                console.log(respuesta)
+            }
+        );
+
+    }
+</script>
+<% if(pedidos.length > 0){ %>
+
+<% } %>
+<div class="row">
+
+    <div class="col-sm-1"></div>
+    <div class="col-sm-10">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">MIS PEDIDOS</h2>
+
+                <table class="table table-striped" id="tableRow">
+                    <thead>
+                    <tr>
+                        <th>Nombre comprador</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% pedidos.forEach((pedido)=>{ %>
+                        <tr id="<%= pedido.ipPedido %>  ">
+                            <td><%= pedido.ipPedido %></td>
+                            <td><%= pedido.estadoPedido %></td>
+                            <td><%= pedido.totalConImpuesto %></td>
+                            <% if(pedido.estadoPedido!='Despachado'){ %>
+                            <td>
+                                <form action="/api/pedido/cancelar/<%= pedido.ipPedido %>"
+                                      method="post">
+                                    <label for="idPedido"></label>
+                                    <input id="idPedido" type="text" name="idPedido" value="<%= pedido.idPedido %>" hidden>
+                                    <button class="btn btn-danger" onclick="recargap()" type="submit">Cancelar</button>
+                                </form>
+                            </td>
+                            <% } %>
+                        </tr>
+                    <% }) %>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-sm-1"></div>
+</div>
+
+
+<script>
+
+    const url = 'http://localhost:3010/websockets';
+    const socket = io(url);
+    console.log("adf")
+    socket.on(
+        'connect', //nombre del evento
+        () => {
+            console.log('Estamos conectados');
+            //socket.disconnect();
+            //socket.connect()
+        }
+    );
+    socket.on(
+        'recarga', //nombre del evento
+        (data) => {
+            console.log('Estamos recargados', data);
+            var cont=0
+            while (cont<10000){
+                cont++
+            }
+
+
+            location.reload()
+            //socket.disconnect();
+            //socket.connect()
+        }
+    );
+    socket.on(
+        'recargaPedido', //nombre del evento
+        (data) => {
+            console.log('Estamos recargados', data);
+            var cont=0
+            while (cont<50000){
+                cont++
+            }
+
+                location.reload()
+
+            //socket.disconnect();
+            //socket.connect()
+        }
+    );
+    socket.on(
+        'saludaron', //nombre del evento
+        (data) => {
+            console.log('Estamos recargados', data);
+
+            window.reload()
+            //socket.disconnect();
+            //socket.connect()
+        }
+    );
+
+    function anadirEtiqueta(contenedor, elementoHTML) {
+        contenedor.appendChild(elementoHTML);
+    }
+</script>
+
+
+</body>
+</html>
